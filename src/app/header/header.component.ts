@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -6,5 +6,14 @@ import { Component } from '@angular/core';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
+  
+  @Output()
+  current_page = new EventEmitter<String>();
 
+  goToRecipes(){
+    this.current_page.emit("Recipes");
+  }
+  goToShoppingList(){
+    this.current_page.emit("Shopping_List");
+  }
 }
