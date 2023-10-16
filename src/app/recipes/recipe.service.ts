@@ -9,7 +9,8 @@ import { ShoppingListService } from '../shopping-list/shopping-list.service';
 export class RecipeService {
 
   recipeSelected = new EventEmitter<Recipe>();
-  private recipes: Recipe[] = [
+  
+  private recipes: Recipe[] = [ 
     new Recipe(
       'beef tagine with prunes',
       "One of the most important dishes of Moroccan cuisine. The plate is also known as M'assal in Rabat.[1] It is a sweet and salty meat tajine, combining a ras el hanout blend of spices with honey, cinnamon and almonds.",
@@ -32,10 +33,13 @@ export class RecipeService {
 
   constructor(private shoppingService : ShoppingListService){}
 
+  getRecipeById(id : number) : Recipe {
+    return this.recipes[id];
+  }
   getRecipes(): Recipe[]{
     return this.recipes.slice();
   }
   addIngredientsToShopingList(ingredients : Ingredient[]){
       this.shoppingService.addIngredients(ingredients)
   }
-}
+} 
