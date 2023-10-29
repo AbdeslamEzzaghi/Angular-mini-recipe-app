@@ -10,8 +10,8 @@ import { Subject } from 'rxjs';
 export class RecipeService {
 
   recipesChanged = new Subject<Recipe[]>()
-  
-  private recipes: Recipe[] = [ 
+  private recipes: Recipe[] = [];
+  /*private recipes: Recipe[] = [ 
     new Recipe(
       'beef tagine with prunes',
       "One of the most important dishes of Moroccan cuisine. The plate is also known as M'assal in Rabat.[1] It is a sweet and salty meat tajine, combining a ras el hanout blend of spices with honey, cinnamon and almonds.",
@@ -30,7 +30,7 @@ export class RecipeService {
       'https://pbs.twimg.com/media/F7LjXUlXIAA6Nl2?format=jpg&name=medium',
       [new Ingredient('chicken',1),new Ingredient('halba',30),new Ingredient('oignon',3)]
     ),
-  ];
+  ];*/
 
   constructor(private shoppingService : ShoppingListService){}
 
