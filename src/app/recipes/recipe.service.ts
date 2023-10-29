@@ -40,6 +40,10 @@ export class RecipeService {
   getRecipes(): Recipe[]{
     return this.recipes.slice();
   }
+  setRecipes(recipes : Recipe[]){
+    this.recipes = recipes;
+    this.recipesChanged.next(this.recipes.slice())
+  }
   addIngredientsToShopingList(ingredients : Ingredient[]){
       this.shoppingService.addIngredients(ingredients)
   }
