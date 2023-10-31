@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, tap } from 'rxjs';
+import { exhaustMap, map, take, tap } from 'rxjs';
 import { Recipe } from '../recipes/recipe.model';
 import { RecipeService } from '../recipes/recipe.service';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,11 @@ export class DataStorageService {
   private urlAPI =
     'https://angular-food-app-backend-default-rtdb.firebaseio.com/recipes.json';
 
-  constructor(private http: HttpClient, private recipeService: RecipeService) {}
+  constructor(
+    private http: HttpClient,
+    private recipeService: RecipeService,
+    private authService: AuthService
+  ) {}
 
   storeRecipes() {
     const recipes = this.recipeService.getRecipes();
@@ -22,7 +27,28 @@ export class DataStorageService {
 
   fetchRecipes() {
     //<[key:String]:Recipe>
-    return this.http.get<Recipe[]>(this.urlAPI)
+    return this.authService.user.pipe(
+      take(1),
+      exhaustMap((user) => {
+        return this.http.get<Recipe[]>(this.urlAPI, { 
+          params: new HttpParams().set('auth', user.token),
+        });
+      }),
+      map((recipes) => {
+        return recipes.map((recipe) => {
+          return {
+            ...recipe,
+            ingredients: recipe.ingredients ? recipe.ingredients : [],
+          };
+        });
+      }),
+      tap((recipes) => {
+        console.log(recipes);
+        this.recipeService.setRecipes(recipes);
+      })
+    );
+
+    /*return this.http.get<Recipe[]>(this.urlAPI)
     .pipe(
       map(
         recipes => {
@@ -38,9 +64,8 @@ export class DataStorageService {
           this.recipeService.setRecipes(recipes)
         }
       )
-      )
+      )*/
 
-    
     /*.pipe(
       map(
         data => {

@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject, catchError, tap, throwError } from 'rxjs';
+import { BehaviorSubject, Subject, catchError, tap, throwError } from 'rxjs';
 import { User } from './user.model';
 import { Router } from '@angular/router';
 
@@ -17,7 +17,7 @@ export interface AuthResponseData {
   providedIn: 'root',
 })
 export class AuthService {
-  user = new Subject<User>();
+  user = new BehaviorSubject<User>(null);
 
   API_KEY = 'AIzaSyDI4-YaZSdVUB9_QbquxlwR4bV2_OoWELs';
   frbsSignUpApiURL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${this.API_KEY}`;
@@ -38,7 +38,7 @@ export class AuthService {
           this.handleAuthetication(
             response.email,
             response.localId,
-            response.refreshToken,
+            response.idToken,
             response.expiresIn
           );
         })
@@ -57,7 +57,7 @@ export class AuthService {
           this.handleAuthetication(
             response.email,
             response.localId,
-            response.refreshToken,
+            response.idToken,
             response.expiresIn
           );
         })
