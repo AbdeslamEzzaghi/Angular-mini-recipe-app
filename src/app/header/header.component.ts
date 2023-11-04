@@ -20,8 +20,11 @@ export class HeaderComponent implements OnInit,OnDestroy{
       user => {this.isAuthenticated = !user ? false : true}
     );  
   }
+  onLogout(){
+    this.authService.logout();
+  }
   ngOnDestroy(): void {
-    this.userSub.unsubscribe();
+    this.userSub.unsubscribe(); 
   }
   onSaveData(){
     this.dsService.storeRecipes();

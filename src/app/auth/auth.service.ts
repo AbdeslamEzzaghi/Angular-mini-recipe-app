@@ -18,12 +18,13 @@ export interface AuthResponseData {
 })
 export class AuthService {
   user = new BehaviorSubject<User>(null);
+  private tokenExpirationToken : any;
 
   API_KEY = 'AIzaSyDI4-YaZSdVUB9_QbquxlwR4bV2_OoWELs';
   frbsSignUpApiURL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${this.API_KEY}`;
   frbsSignInApiURL = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${this.API_KEY}`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   signup(email: string, password: string) {
     return this.http
@@ -64,19 +65,63 @@ export class AuthService {
       );
   }
 
+  logout() {
+    this.user.next(null);
+    this.router.navigate(['/auth']);
+    localStorage.removeItem('userData');
+    
+    if(this.tokenExpirationToken){
+      clearTimeout(this.tokenExpirationToken);
+    }
+    this.tokenExpirationToken = null;
+  }
+
+  autoLogout(expirationDuration : number){
+
+    this.tokenExpirationToken = setTimeout(()=>{
+      this.logout();
+    },expirationDuration)
+
+  }
+
   private handleAuthetication(
     email: string,
     id: string,
     token: string,
     expiresIn: string
   ) {
-
     const expiringDate = new Date(new Date().getTime() + +expiresIn * 1000);
     const newUser = new User(email, id, token, expiringDate);
+
     this.user.next(newUser);
-
+    this.autoLogout(+expiresIn * 1000);
+    localStorage.setItem('userData', JSON.stringify(newUser));
   }
+  autoLogin() {
+    const userStored: {
+      email: string;
+      id: string;
+      _token: string;
+      _tokenExpirationDate: string;
+    } = JSON.parse(localStorage.getItem('userData'));
 
+    if (!userStored) {
+      return;
+    }
+
+    const loadedUser = new User(
+      userStored.email,
+      userStored.id,
+      userStored._token,
+      new Date(userStored._tokenExpirationDate)
+    );
+
+    if(loadedUser.token){
+      const expirationDuration : number = new Date(userStored._tokenExpirationDate).getTime() - new Date().getTime(); 
+      this.autoLogout(expirationDuration);
+      this.user.next(loadedUser);      
+    }
+  }
   private handleError(errorRes: HttpErrorResponse) {
     let customErr = 'an unknown error has occured';
     if (!errorRes.error || !errorRes.error.error) {
