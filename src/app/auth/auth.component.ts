@@ -54,6 +54,10 @@ export class AuthComponent {
 
     form.reset();
   }
+
+  onHandleClose(){
+    this.error = null;
+  }
 }
 /*
       this.authService.signup(email,password).subscribe(
