@@ -14,13 +14,6 @@ import { AuthGuard } from './auth/auth.guard';
 
 const approutes : Routes = [
   {path :'', redirectTo:'/recipes',pathMatch:'full'},
-  {path:'recipes',component:RecipesComponent , canActivate : [AuthGuard] 
-  ,children : [
-    { path : '' , component : RecipeStartComponent,/*resolve:[RecipesResolverService]*/},
-    { path : 'new' , component : RecipeEditComponent},
-    { path : ':id' , component : RecipeDetailComponent,resolve:[RecipesResolverService]},
-    { path : ':id/edit' , component : RecipeEditComponent,resolve:[RecipesResolverService]}
-  ]},
   {path:'shopping-list',component:ShoppingListComponent},
   {path:'auth',component:AuthComponent},
 ]
