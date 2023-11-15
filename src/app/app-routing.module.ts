@@ -14,7 +14,7 @@ import { AuthGuard } from './auth/auth.guard';
 
 const approutes : Routes = [
   {path :'', redirectTo:'/recipes',pathMatch:'full'},
-  {path:'auth',component:AuthComponent},
+  //{path:'auth',component:AuthComponent},
 ]
 
 @NgModule({

@@ -16,26 +16,28 @@ import { RecipesModule } from './recipes/recipes.module';
 import { ShoppingListModule } from './shopping-list/shopping-list.module';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core.module';
+import { AuthModule } from './auth/auth.module';
 
 @NgModule({ 
   declarations: [
     AppComponent,
     HeaderComponent,
     //DropdownDirective,
-    AuthComponent,
+    //AuthComponent,
     //LoadingSpinnerComponent,
     //AlertComponent
   ],
   imports: [
     BrowserModule,
-    FormsModule,
+    //FormsModule,
     AppRoutingModule,
-    ReactiveFormsModule,
-    HttpClientModule,
+    //ReactiveFormsModule,
+    HttpClientModule, 
     RecipesModule,
     ShoppingListModule,
     SharedModule,
-    CoreModule
+    CoreModule,
+    AuthModule
   ],
   //providers: [{provide:HTTP_INTERCEPTORS,useClass:AuthInterceptorService,multi:true}],
   bootstrap: [AppComponent]
